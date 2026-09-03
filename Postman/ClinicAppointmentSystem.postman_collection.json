@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "c2dfe525-53f5-43e6-b71c-e68f806cc152",
+    "name": "ClinicAppointmentSystem",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56536049",
+    "_collection_link": "https://go.postman.co/collection/56536049-c2dfe525-53f5-43e6-b71c-e68f806cc152?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Patients",
+      "item": [
+        {
+          "name": "ErrorTests",
+          "item": [
+            {
+              "name": "Duplicate Email Error",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstName\": \"Ahmed\",\r\n    \"lastName\": \"Ali\",\r\n    \"email\": \"hamza.batman@gmail.com\",\r\n    \"phoneNumber\": \"01111111111\",\r\n    \"dateOfBirth\": \"2000-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid Email Error",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstName\": \"Ahmed\",\r\n    \"lastName\": \"Ali\",\r\n    \"email\": \"ay kalam\",\r\n    \"phoneNumber\": \"01111111111\",\r\n    \"dateOfBirth\": \"2000-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Missing required field",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"lastName\": \"Ali\",\r\n    \"email\": \"ahmed@gmail.com\",\r\n    \"phoneNumber\": \"01111111111\",\r\n    \"dateOfBirth\": \"2000-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Date of birth in the future",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{   \r\n    \"firstName\": \"messi\",\r\n    \"lastName\": \"Ali\",\r\n    \"email\": \"ahmed@gmail.com\",\r\n    \"phoneNumber\": \"01111111111\",\r\n    \"dateOfBirth\": \"2080-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Patient Not Found",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/600",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "600"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Duplicate Email Error",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n        \"firstName\": \"messi\",\r\n        \"lastName\": \"Galal\",\r\n        \"email\": \"hamza.batman@gmail.com\",\r\n        \"phoneNumber\": \"01012345678\",\r\n        \"dateOfBirth\": \"2005-05-15\",\r\n        \"gender\": \"MALE\"\r\n        \r\n    }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/3",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "3"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Patient Not found",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstName\": \"Test\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"test999@gmail.com\",\r\n    \"phoneNumber\": \"01000000000\",\r\n    \"dateOfBirth\": \"2000-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/6",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "6"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid data",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstName\": \"\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"wrong\",\r\n    \"phoneNumber\": \"01000000000\",\r\n    \"dateOfBirth\": \"2030-01-01\",\r\n    \"gender\": \"MALE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Patient not found",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/40",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "40"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "CreatePatient",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Mohamed\",\r\n    \"lastName\": \"Adel\",\r\n    \"email\": \"mohamed@gmail.com\",\r\n    \"phoneNumber\": \"01012524412\",\r\n    \"dateOfBirth\": \"2006-03-23\",\r\n    \"gender\": \"MALE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/patients",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetAllPatients",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient data",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"Hamza\",\r\n    \"lastName\": \"Galal\",\r\n    \"email\": \"hamza.batman@gmail.com\",\r\n    \"phoneNumber\": \"01012345678\",\r\n    \"dateOfBirth\": \"2005-05-15\",\r\n    \"gender\": \"MALE\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/patients/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
