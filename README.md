@@ -271,10 +271,10 @@ The project includes the following UML diagrams:
 ![UML UseCase  Diagram](docs/Use%20Case.png)
 
 ### Class Diagram
-![UML Class Diagram](docs/Class%20Diagram.png)
+![Class Diagram](./docs/Class%20Diagram.png)
 
 ### Register Patient Sequence Diagram
-![UML Sequence Diagram](docs/Sequence%20Diagram(register%20patient).png)
+![Register Patient Sequence Diagram](./docs/Sequence%20Diagram%28register%20patient%29.png)
 
 
 These diagrams describe the patient management requirements and the resulting application structure.
