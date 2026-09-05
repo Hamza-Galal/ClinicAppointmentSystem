@@ -268,9 +268,9 @@ Error scenarios to test:
 The project includes the following UML diagrams:
 
 ### Use Case Diagram
-![UML Use Case Diagram](./Docs/usecase.png)
+![UML Use Case Diagram](./Docs/useCase.png)
 ### Class Diagram
-![UML Class Diagram](./Docs/classdiagram.png)
+![UML Class Diagram](./Docs/classDiagram.png)
 
 ### Register Patient Sequence Diagram
 ![UML Sequence Diagram](./Docs/SequenceDiagram.png)
