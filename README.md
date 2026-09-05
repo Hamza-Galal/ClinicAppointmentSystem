@@ -268,12 +268,12 @@ Error scenarios to test:
 The project includes the following UML diagrams:
 
 ### Use Case Diagram
-![Use Case Diagram](./docs/use-case.png)
+![UML Use Case Diagram](./docs/usecase.png)
 ### Class Diagram
-![Class Diagram](./docs/class-diagram.png)
+![UML Class Diagram](./docs/classdiagram.png)
 
 ### Register Patient Sequence Diagram
-![Register Patient Sequence Diagram](./docs/Sequence-Diagram%28register-patient%29.png)
+![UML Sequence Diagram](./Docs/SequenceDiagram.png)
 
 These diagrams describe the patient management requirements and the resulting application structure.
 
