@@ -38,4 +38,7 @@ public class DoctorCreateRequest {
     @NotNull(message = "Consultation fee is required")
     @PositiveOrZero(message = "Consultation fee cannot be negative")
     private Double consultationFee;
+
+    @NotNull(message = "Specialization is required")
+    private Long specializationId;
 }

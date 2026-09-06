@@ -54,6 +54,15 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.updateDoctor(id, request));
     }
 
+    @PutMapping("/{doctorId}/specialization/{specializationId}")
+    public ResponseEntity<DoctorResponse> assignSpecialization(
+            @PathVariable Long doctorId,
+            @PathVariable Long specializationId) {
+        return ResponseEntity.ok(
+                doctorService.assignSpecialization(doctorId, specializationId)
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<DoctorResponse> deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);

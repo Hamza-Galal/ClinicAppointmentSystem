@@ -17,4 +17,6 @@ public class DoctorResponse {
     private String licenseNumber;
     private Integer yearsOfExperience;
     private Double consultationFee;
+    private Long specializationId;
+    private String specializationName;
 }

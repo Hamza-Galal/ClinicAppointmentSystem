@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,24 +15,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Doctor {
+public class Specialization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String phoneNumber;
-
     @Column(unique = true)
-    private String licenseNumber;
+    private String name;
 
-    private Integer yearsOfExperience;
-    private Double consultationFee;
-
-    @ManyToOne
-    @JoinColumn(name = "specialization_id")
-    private Specialization specialization;
+    private String description;
 }

@@ -9,22 +9,32 @@ import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.DoctorUpdateRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.DoctorResponse;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.DoctorNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.DuplicateLicenseException;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.SpecializationNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Doctor;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.Specialization;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.SpecializationRepository;
 
 @Service
 public class DoctorService {
 
     private final DoctorRepository repo;
+    private final SpecializationRepository specializationRepository;
 
-    public DoctorService(DoctorRepository repo) {
+    public DoctorService(
+            DoctorRepository repo,
+            SpecializationRepository specializationRepository) {
         this.repo = repo;
+        this.specializationRepository = specializationRepository;
     }
 
     public DoctorResponse createDoctor(DoctorCreateRequest request) {
         if (repo.findByLicenseNumber(request.getLicenseNumber()).isPresent()) {
             throw new DuplicateLicenseException("License Number Already exists");
         }
+
+        Specialization specialization = specializationRepository.findById(request.getSpecializationId())
+                .orElseThrow(() -> new SpecializationNotFoundException("Specialization Not Found"));
 
         Doctor doctor = new Doctor();
         doctor.setFirstName(request.getFirstName());
@@ -34,6 +44,7 @@ public class DoctorService {
         doctor.setLicenseNumber(request.getLicenseNumber());
         doctor.setYearsOfExperience(request.getYearsOfExperience());
         doctor.setConsultationFee(request.getConsultationFee());
+        doctor.setSpecialization(specialization);
 
         repo.save(doctor);
 
@@ -63,6 +74,9 @@ public class DoctorService {
             throw new DuplicateLicenseException("License Number Already exists");
         }
 
+        Specialization specialization = specializationRepository.findById(request.getSpecializationId())
+                .orElseThrow(() -> new SpecializationNotFoundException("Specialization Not Found"));
+
         doctor.setFirstName(request.getFirstName());
         doctor.setLastName(request.getLastName());
         doctor.setEmail(request.getEmail());
@@ -70,6 +84,7 @@ public class DoctorService {
         doctor.setLicenseNumber(request.getLicenseNumber());
         doctor.setYearsOfExperience(request.getYearsOfExperience());
         doctor.setConsultationFee(request.getConsultationFee());
+        doctor.setSpecialization(specialization);
 
         repo.save(doctor);
 
@@ -84,7 +99,28 @@ public class DoctorService {
         repo.deleteById(id);
     }
 
+    public DoctorResponse assignSpecialization(Long doctorId, Long specializationId) {
+        Doctor doctor = repo.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor Not Found"));
+
+        Specialization specialization = specializationRepository.findById(specializationId)
+                .orElseThrow(() -> new SpecializationNotFoundException("Specialization Not Found"));
+
+        doctor.setSpecialization(specialization);
+        repo.save(doctor);
+
+        return convertToResponse(doctor);
+    }
+
     public DoctorResponse convertToResponse(Doctor doctor) {
+        Long specializationId = null;
+        String specializationName = null;
+
+        if (doctor.getSpecialization() != null) {
+            specializationId = doctor.getSpecialization().getId();
+            specializationName = doctor.getSpecialization().getName();
+        }
+
         return new DoctorResponse(
                 doctor.getId(),
                 doctor.getFirstName(),
@@ -93,7 +129,9 @@ public class DoctorService {
                 doctor.getPhoneNumber(),
                 doctor.getLicenseNumber(),
                 doctor.getYearsOfExperience(),
-                doctor.getConsultationFee()
+                doctor.getConsultationFee(),
+                specializationId,
+                specializationName
         );
     }
 }
