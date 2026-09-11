@@ -3,17 +3,24 @@ package com.ClinicSystem.ClinicAppointmentSystem.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.AppointmentCreateRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.AppointmentResponse;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.AppointmentConflictException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.AppointmentNotFoundException;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.DoctorNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.OutsideWorkingHoursException;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.PatientNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Appointment;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.Doctor;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.DoctorSchedule;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.Patient;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Enums.AppointmentStatus;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.AppointmentRepository;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorScheduleRepository;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.PatientRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -43,7 +50,7 @@ public class AppointmentService {
             throw new AppointmentConflictException("Appointment cannot be in the past");
         }
 
-        List<DoctorSchedule> schedules = doctorScheduleRepository.findDoctorById(doctor.getId());
+        List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctorId(doctor.getId());
         boolean withinSchedule = schedules.stream().
         anyMatch(schedule -> schedule.getDayOfWeek().equals(request.getAppointmentDate().getDayOfWeek())
          && !request.getAppointmentTime().isBefore(schedule.getStartTime())
