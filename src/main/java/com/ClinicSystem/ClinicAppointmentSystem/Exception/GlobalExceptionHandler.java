@@ -186,5 +186,16 @@ public class GlobalExceptionHandler {
         response.setPath(request.getRequestURI());
         return ResponseEntity.badRequest().body(response);
     }
+    @ExceptionHandler (DuplicateScheduleException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateScheduleException(DuplicateEmailException ex , HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+
+    }
 }
 
