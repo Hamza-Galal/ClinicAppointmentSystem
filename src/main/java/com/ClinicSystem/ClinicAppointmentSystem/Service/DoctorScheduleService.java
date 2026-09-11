@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.DoctorScheduleRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.DoctorScheduleResponse;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.DoctorNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.InvalidScheduleException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.ScheduleConflictException;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.Doctor;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.DoctorSchedule;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorScheduleRepository;
 
 import lombok.AllArgsConstructor;
@@ -36,7 +39,7 @@ public class DoctorScheduleService {
         schedule.setStartTime(request.getStartTime());
         schedule.setEndTime(request.getEndTime());
         DoctorSchedule saved = scheduleRepo.save(schedule);
-        return convertToResponse(schedule);
+        return convertToResponse(saved);
 
  }
  public List<DoctorScheduleResponse> getDoctorAvailability(Long doctorId){
