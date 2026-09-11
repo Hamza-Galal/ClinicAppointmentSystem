@@ -103,6 +103,36 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+    
+    @ExceptionHandler(SpecializationNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleSpecializationNotFoundException(
+            SpecializationNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(404);
+        response.setError("Not Found");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+     @ExceptionHandler(DuplicateSpecializationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateSpecializationException(
+            DuplicateSpecializationException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
         @ExceptionHandler(InvalidScheduleException.class)
     public ResponseEntity<ErrorResponse> handleInvalidScheduleException(InvalidScheduleException ex,
             HttpServletRequest request) {
@@ -125,6 +155,36 @@ public class GlobalExceptionHandler {
         response.setMessage(ex.getMessage());
         response.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAppointmentNotFoundException(AppointmentConflictException ex , HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(404);
+        response.setError("Not Found");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+    @ExceptionHandler (AppointmentConflictException.class)
+    public ResponseEntity<ErrorResponse> handleAppointmentConflictException(AppointmentConflictException ex , HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+    @ExceptionHandler (OutsideWorkingHoursException.class)
+    public ResponseEntity<ErrorResponse> handleOutsideWorkingHoursException(OutsideWorkingHoursException ex , HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(400);
+        response.setError("Bad Request");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.badRequest().body(response);
     }
 }
 
