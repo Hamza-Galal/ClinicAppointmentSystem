@@ -6,9 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.DoctorScheduleRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.DoctorScheduleResponse;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.DoctorNotFoundException;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.DuplicateScheduleException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.InvalidScheduleException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.ScheduleConflictException;
+import com.ClinicSystem.ClinicAppointmentSystem.Model.Doctor;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.DoctorSchedule;
+import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorScheduleRepository;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +27,13 @@ public class DoctorScheduleService {
     if (!request.getStartTime().isBefore(request.getEndTime())) {
         throw new InvalidScheduleException("Start Time must be before End Time");
     }
+    boolean isDuplicate = scheduleRepo.existsByDoctorIdAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(doctorId,
+         request.getDayOfWeek(),
+         request.getStartTime(),
+          request.getEndTime());
+    if (isDuplicate) {
+        throw new DuplicateScheduleException("This exact Schedule exists for this doctor already");
+    }
     boolean conflict = scheduleRepo.existsByDoctorIdAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(doctorId,
          request.getDayOfWeek(),
          request.getStartTime(),
@@ -30,13 +41,14 @@ public class DoctorScheduleService {
         if (conflict) {
             throw new ScheduleConflictException("Schedule Conflict");
         }
+    
         DoctorSchedule schedule = new DoctorSchedule();
         schedule.setDoctor(doctor);
         schedule.setDayOfWeek(request.getDayOfWeek());
         schedule.setStartTime(request.getStartTime());
         schedule.setEndTime(request.getEndTime());
         DoctorSchedule saved = scheduleRepo.save(schedule);
-        return convertToResponse(schedule);
+        return convertToResponse(saved);
 
  }
  public List<DoctorScheduleResponse> getDoctorAvailability(Long doctorId){
