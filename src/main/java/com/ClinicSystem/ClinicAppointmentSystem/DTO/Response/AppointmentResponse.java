@@ -15,7 +15,7 @@ public class AppointmentResponse {
     private  Long id;
     private  Long patientId;
     private  Long doctorId;
-    private LocalDate appointmenDate;
+    private LocalDate appointmentDate;
     private LocalTime appointmentTime;
     private String reasonForVisit;
     private AppointmentStatus status;

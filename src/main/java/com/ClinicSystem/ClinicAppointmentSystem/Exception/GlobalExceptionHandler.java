@@ -158,7 +158,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
     @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAppointmentNotFoundException(AppointmentConflictException ex , HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> handleAppointmentNotFoundException(AppointmentNotFoundException ex , HttpServletRequest request){
         ErrorResponse response = new ErrorResponse();
         response.setTimeStamp(LocalDateTime.now());
         response.setStatus(404);
@@ -188,7 +188,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(response);
     }
     @ExceptionHandler (DuplicateScheduleException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateScheduleException(DuplicateEmailException ex , HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> handleDuplicateScheduleException(DuplicateScheduleException ex , HttpServletRequest request){
         ErrorResponse response = new ErrorResponse();
         response.setTimeStamp(LocalDateTime.now());
         response.setStatus(409);
