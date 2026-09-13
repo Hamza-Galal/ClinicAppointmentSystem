@@ -16,4 +16,10 @@ public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule,L
         LocalTime startTime,
         LocalTime endTime
     );
+    boolean existsByDoctorIdAndDayOfWeekAndStartTimeAndEndTime(
+        Long doctorId,
+        DayOfWeek dayOfWeek,
+        LocalTime startTime,
+        LocalTime endTime
+    );
 }
