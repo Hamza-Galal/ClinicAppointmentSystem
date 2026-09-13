@@ -54,7 +54,7 @@ public class AppointmentService {
         boolean withinSchedule = schedules.stream().
         anyMatch(schedule -> schedule.getDayOfWeek().equals(request.getAppointmentDate().getDayOfWeek())
          && !request.getAppointmentTime().isBefore(schedule.getStartTime())
-         && !request.getAppointmentTime().isBefore(schedule.getEndTime()));
+         && request.getAppointmentTime().isBefore(schedule.getEndTime()));
 
          if (!withinSchedule) {
             throw new OutsideWorkingHoursException("Appointment time is outside the doctor's working hours");
@@ -69,7 +69,7 @@ public class AppointmentService {
             throw new AppointmentConflictException("Doctor Already Has An Appointment at this time");
          }
 
-           boolean PatientConflict = appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(patient.getId(), 
+           boolean PatientConflict = appointmentRepo.existsByPatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(patient.getId(), 
          request.getAppointmentDate(), 
          request.getAppointmentTime(), 
          AppointmentStatus.CANCELLED);

@@ -10,6 +10,6 @@ import com.ClinicSystem.ClinicAppointmentSystem.Model.Enums.AppointmentStatus;
 
 public interface AppointmentRepository extends JpaRepository<Appointment,Long> {
     boolean existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusNot(Long doctorId , LocalDate appointmentDate , LocalTime appointmentTime , AppointmentStatus status);
-    boolean existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(Long patientId , LocalDate appointmentDate , LocalTime appointmentTime , AppointmentStatus status);
+    boolean existsByPatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(Long patientId , LocalDate appointmentDate , LocalTime appointmentTime , AppointmentStatus status);
 
 }
