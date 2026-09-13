@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "c2dfe525-53f5-43e6-b71c-e68f806cc152",
+    "_postman_id": "340526fa-8c1d-4077-a6be-863a0e6698a4",
     "name": "ClinicAppointmentSystem",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "56536049",
-    "_collection_link": "https://go.postman.co/collection/56536049-c2dfe525-53f5-43e6-b71c-e68f806cc152?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/56536049-340526fa-8c1d-4077-a6be-863a0e6698a4?source=collection_link"
   },
   "item": [
     {
@@ -390,6 +390,300 @@
       "name": "Doctor",
       "item": [
         {
+          "name": "Error Test",
+          "item": [
+            {
+              "name": "Duplicate License number",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"firstName\": \"Mohamed\",\r\n      \"lastName\": \"Ali\", \r\n      \"email\": \"m@test.com\", \r\n      \"phoneNumber\": \"01012345679\", \r\n      \"licenseNumber\": \"DOC001\", \r\n      \"yearsOfExperience\": 3, \r\n      \"consultationFee\": 200, \r\n      \"specializationId\": 1 \r\n      }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid Email",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n    \"firstName\": \"Ahmed\", \r\n    \"lastName\": \"Ali\", \r\n    \"email\": \"invalid-email\", \r\n    \"phoneNumber\": \"01012345678\", \r\n    \"licenseNumber\": \"LIC101\", \r\n    \"yearsOfExperience\": 5, \r\n    \"consultationFee\": 300, \r\n    \"specializationId\": 1 \r\n    }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Empty First Name",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"firstName\": \"\", \r\n    \"lastName\": \"Ali\", \r\n    \"email\": \"test@test.com\", \r\n    \"phoneNumber\": \"01012345678\", \r\n    \"licenseNumber\": \"LIC102\", \r\n    \"yearsOfExperience\": 5, \r\n    \"consultationFee\": 300, \r\n    \"specializationId\": 1 \r\n    }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Negative Experience",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n    \"firstName\": \"Ahmed\", \r\n    \"lastName\": \"Ali\", \r\n    \"email\": \"test@test.com\", \r\n    \"phoneNumber\": \"01012345678\", \r\n    \"licenseNumber\": \"LIC103\", \r\n    \"yearsOfExperience\": -1,\r\n     \"consultationFee\": 300, \r\n     \"specializationId\": 1 \r\n     }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Negative Consultation Fee",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"firstName\": \"Ahmed\",\r\n  \"lastName\": \"Ali\",\r\n  \"email\": \"ahmed@example.com\",\r\n  \"phoneNumber\": \"01012345678\",\r\n  \"licenseNumber\": \"DOC001\",\r\n  \"yearsOfExperience\": 5,\r\n  \"consultationFee\": -300,\r\n  \"specializationId\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Specialization Not Found",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n    \"firstName\": \"Ahmed\", \r\n    \"lastName\": \"Ali\", \r\n    \"email\": \"test@test.com\", \r\n    \"phoneNumber\": \"01012345678\",\r\n     \"licenseNumber\": \"LIC105\", \r\n     \"yearsOfExperience\": 5, \r\n     \"consultationFee\": 300,\r\n      \"specializationId\": 999 \r\n      }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Doctor By Invalid Id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/9898",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "9898"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Doctor Invalid Id",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"firstName\": \"Updated\",\r\n  \"lastName\": \"Doctor\",\r\n  \"email\": \"updated@test.com\",\r\n  \"phoneNumber\": \"01098765432\",\r\n  \"licenseNumber\": \"LIC200\",\r\n  \"yearsOfExperience\": 10,\r\n  \"consultationFee\": 500,\r\n  \"specializationId\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/9898",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "9898"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Specialization To Invalid Doctor",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"specializationId\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/999/specializations/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "999",
+                    "specializations",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Assign Invalid Specialization",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"specializationId\": 999\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/1/specialization/999",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "1",
+                    "specialization",
+                    "999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "CreateDoctor",
           "request": {
             "method": "POST",
@@ -486,6 +780,141 @@
       "name": "Specializations",
       "item": [
         {
+          "name": "ErrorTests",
+          "item": [
+            {
+              "name": "Duplicate Specialization",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n    \"name\": \"Cardiology\", \r\n    \"description\": \"heart doctooor\" \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/specializations",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "specializations"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Specialization with empty name",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n     \"name\": \"\", \r\n     \"description\": \"Heart specialist\" \r\n    }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/specializations",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "specializations"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Specialization with empty description",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{ \r\n    \"name\": \"Neurology\", \r\n    \"description\": \"\"\r\n     }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/specializations",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "specializations"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get a non existing SP",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/specializations/8",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "specializations",
+                    "8"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get doctors for non existing SP",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/specializations/50/doctors",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "specializations",
+                    "50",
+                    "doctors"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "Create Specialization",
           "request": {
             "method": "POST",
@@ -550,6 +979,543 @@
                 "api",
                 "specializations",
                 "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Doctor Availability",
+      "item": [
+        {
+          "name": "Error Tests",
+          "item": [
+            {
+              "name": "Doctor Not Found",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dayOfWeek\": \"MONDAY\",\r\n  \"startTime\": \"09:00\",\r\n  \"endTime\": \"17:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/999/availability",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "999",
+                    "availability"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Start Time After End Time",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dayOfWeek\": \"MONDAY\",\r\n  \"startTime\": \"18:00\",\r\n  \"endTime\": \"09:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/1/availability",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "1",
+                    "availability"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Duplicate Schedule",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dayOfWeek\": \"MONDAY\",\r\n  \"startTime\": \"09:00\",\r\n  \"endTime\": \"17:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/1/availability",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "1",
+                    "availability"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Schedule Conflict",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"dayOfWeek\": \"MONDAY\",\r\n  \"startTime\": \"10:00\",\r\n  \"endTime\": \"15:00\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/doctors/1/availability",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "doctors",
+                    "1",
+                    "availability"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Availability",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dayOfWeek\": \"MONDAY\",\r\n  \"startTime\": \"09:00\",\r\n  \"endTime\": \"17:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/doctors/1/availability",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "doctors",
+                "1",
+                "availability"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Availability",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/doctors/1/availability",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "doctors",
+                "1",
+                "availability"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointment Management",
+      "item": [
+        {
+          "name": "Error Tests",
+          "item": [
+            {
+              "name": "Appointment not found",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments/23",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments",
+                    "23"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create appointment in the past",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"patientId\": 1,\r\n  \"doctorId\": 1,\r\n  \"appointmentDate\": \"2024-01-01\",\r\n  \"appointmentTime\": \"10:00\",\r\n  \"reasonForVisit\": \"Headache\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create AP outside working hours",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"patientId\": 1,\r\n  \"doctorId\": 1,\r\n  \"appointmentDate\": \"2026-12-20\",\r\n  \"appointmentTime\": \"20:00\",\r\n  \"reasonForVisit\": \"Headache\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create AP in occupied slot",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"patientId\": 2,\r\n  \"doctorId\": 1,\r\n  \"appointmentDate\": \"2026-12-21\",\r\n  \"appointmentTime\": \"11:00\",\r\n  \"reasonForVisit\": \"Fever\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Confirm Invalid Appointment",
+              "request": {
+                "method": "PATCH",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments/999/confirm",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments",
+                    "999",
+                    "confirm"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Appointment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"patientId\": 1,\r\n  \"doctorId\": 1,\r\n  \"appointmentDate\": \"2026-12-21\",\r\n  \"appointmentTime\": \"11:00\",\r\n  \"reasonForVisit\": \"Headache\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Appointments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get appointments by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments?status=SCHEDULED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "SCHEDULED"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Filter by date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments?date=2026-12-21",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-12-21"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/2/confirm",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "2",
+                "confirm"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/1/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "1",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/2/complete",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "2",
+                "complete"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark No Show",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/3/no-show",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "3",
+                "no-show"
               ]
             }
           },
