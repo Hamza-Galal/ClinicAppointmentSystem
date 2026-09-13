@@ -11,6 +11,7 @@ import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.AppointmentResponse
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.AppointmentConflictException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.AppointmentNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.DoctorNotFoundException;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.InvalidAppointmentStatusException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.OutsideWorkingHoursException;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.PatientNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Appointment;
@@ -37,8 +38,76 @@ public class AppointmentService {
     public AppointmentResponse getAppointmentById(Long id) {
         Appointment appointment = appointmentRepo.findById(id)
                 .orElseThrow(() -> new AppointmentNotFoundException("Appointment NOT Found"));
-
         return convertToResponse(appointment);
+    }
+
+    public AppointmentResponse createAppointment(AppointmentCreateRequest request) {
+        Patient patient = patientRepository.findById(request.getPatientId())
+                .orElseThrow(() -> new PatientNotFoundException("Patient Not Found"));
+
+        Doctor doctor = doctorRepository.findById(request.getDoctorId())
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor Not Found"));
+
+        LocalDateTime appointmenDateTime = LocalDateTime.of(
+                request.getAppointmentDate(),
+                request.getAppointmentTime());
+
+        if (!appointmenDateTime.isAfter(LocalDateTime.now())) {
+            throw new AppointmentConflictException("Appointment cannot be in the past");
+        }
+
+        List<DoctorSchedule> schedules =
+                doctorScheduleRepository.findByDoctorId(doctor.getId());
+
+        boolean withinSchedule = schedules.stream()
+                .anyMatch(schedule ->
+                        schedule.getDayOfWeek().equals(
+                                request.getAppointmentDate().getDayOfWeek())
+                                && !request.getAppointmentTime().isBefore(
+                                schedule.getStartTime())
+                                && !request.getAppointmentTime().isBefore(
+                                schedule.getEndTime()));
+
+        if (!withinSchedule) {
+            throw new OutsideWorkingHoursException(
+                    "Appointment time is outside the doctor's working hours");
+        }
+
+        boolean doctorConflict =
+                appointmentRepo.existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
+                        doctor.getId(),
+                        request.getAppointmentDate(),
+                        request.getAppointmentTime(),
+                        AppointmentStatus.CANCELLED);
+
+        if (doctorConflict) {
+            throw new AppointmentConflictException(
+                    "Doctor Already Has An Appointment at this time");
+        }
+
+        boolean PatientConflict =
+                appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
+                        patient.getId(),
+                        request.getAppointmentDate(),
+                        request.getAppointmentTime(),
+                        AppointmentStatus.CANCELLED);
+
+        if (PatientConflict) {
+            throw new AppointmentConflictException(
+                    "Patient Already Has An Appointment at this time");
+        }
+
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(request.getAppointmentDate());
+        appointment.setAppointmentTime(request.getAppointmentTime());
+        appointment.setReasonForVisit(request.getReasonForVisit());
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
+
+        Appointment saved = appointmentRepo.save(appointment);
+
+        return convertToResponse(saved);
     }
 
     public List<AppointmentResponse> getAppointments(
@@ -85,73 +154,63 @@ public class AppointmentService {
                 .toList();
     }
 
-    public AppointmentResponse createAppointment(AppointmentCreateRequest request) {
-        Patient patient = patientRepository.findById(request.getPatientId())
-                .orElseThrow(() -> new PatientNotFoundException("Patient Not Found"));
+    public AppointmentResponse confirmAppointment(Long id) {
+        return updateAppointmentStatus(id, AppointmentStatus.CONFIRMED);
+    }
 
-        Doctor doctor = doctorRepository.findById(request.getDoctorId())
-                .orElseThrow(() -> new DoctorNotFoundException("Doctor Not Found"));
+    public AppointmentResponse cancelAppointment(Long id) {
+        return updateAppointmentStatus(id, AppointmentStatus.CANCELLED);
+    }
 
-        LocalDateTime appointmenDateTime = LocalDateTime.of(
-                request.getAppointmentDate(),
-                request.getAppointmentTime());
+    public AppointmentResponse completeAppointment(Long id) {
+        return updateAppointmentStatus(id, AppointmentStatus.COMPLETED);
+    }
 
-        if (!appointmenDateTime.isAfter(LocalDateTime.now())) {
-            throw new AppointmentConflictException("Appointment cannot be in the past");
+    public AppointmentResponse markAppointmentAsNoShow(Long id) {
+        return updateAppointmentStatus(id, AppointmentStatus.NO_SHOW);
+    }
+
+    private AppointmentResponse updateAppointmentStatus(
+            Long id,
+            AppointmentStatus newStatus) {
+
+        Appointment appointment = appointmentRepo.findById(id)
+                .orElseThrow(() ->
+                        new AppointmentNotFoundException("Appointment NOT Found"));
+
+        AppointmentStatus currentStatus = appointment.getStatus();
+
+        if (!isValidTransition(currentStatus, newStatus)) {
+            throw new InvalidAppointmentStatusException(
+                    "Invalid appointment status transition from "
+                            + currentStatus
+                            + " to "
+                            + newStatus);
         }
 
-        List<DoctorSchedule> schedules =
-                doctorScheduleRepository.findByDoctorId(doctor.getId());
+        appointment.setStatus(newStatus);
 
-        boolean withinSchedule = schedules.stream()
-                .anyMatch(schedule ->
-                        schedule.getDayOfWeek().equals(
-                                request.getAppointmentDate().getDayOfWeek())
-                                && !request.getAppointmentTime()
-                                .isBefore(schedule.getStartTime())
-                                && !request.getAppointmentTime()
-                                .isBefore(schedule.getEndTime()));
+        Appointment updated = appointmentRepo.save(appointment);
 
-        if (!withinSchedule) {
-            throw new OutsideWorkingHoursException(
-                    "Appointment time is outside the doctor's working hours");
-        }
+        return convertToResponse(updated);
+    }
 
-        boolean doctorConflict =
-                appointmentRepo.existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
-                        doctor.getId(),
-                        request.getAppointmentDate(),
-                        request.getAppointmentTime(),
-                        AppointmentStatus.CANCELLED);
+    private boolean isValidTransition(
+            AppointmentStatus currentStatus,
+            AppointmentStatus newStatus) {
 
-        if (doctorConflict) {
-            throw new AppointmentConflictException(
-                    "Doctor Already Has An Appointment at this time");
-        }
+        return switch (currentStatus) {
+            case SCHEDULED ->
+                    newStatus == AppointmentStatus.CONFIRMED
+                            || newStatus == AppointmentStatus.CANCELLED;
 
-        boolean PatientConflict =
-                appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
-                        patient.getId(),
-                        request.getAppointmentDate(),
-                        request.getAppointmentTime(),
-                        AppointmentStatus.CANCELLED);
+            case CONFIRMED ->
+                    newStatus == AppointmentStatus.COMPLETED
+                            || newStatus == AppointmentStatus.CANCELLED
+                            || newStatus == AppointmentStatus.NO_SHOW;
 
-        if (PatientConflict) {
-            throw new AppointmentConflictException(
-                    "Patient Already Has An Appointment at this time");
-        }
-
-        Appointment appointment = new Appointment();
-        appointment.setPatient(patient);
-        appointment.setDoctor(doctor);
-        appointment.setAppointmentDate(request.getAppointmentDate());
-        appointment.setAppointmentTime(request.getAppointmentTime());
-        appointment.setReasonForVisit(request.getReasonForVisit());
-        appointment.setStatus(AppointmentStatus.SCHEDULED);
-
-        Appointment saved = appointmentRepo.save(appointment);
-
-        return convertToResponse(saved);
+            case CANCELLED, COMPLETED, NO_SHOW -> false;
+        };
     }
 
     private AppointmentResponse convertToResponse(Appointment appointment) {

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.ClinicSystem.ClinicAppointmentSystem.Exception.InvalidAppointmentStatusException;
 
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.ErrorResponse;
 
@@ -196,6 +197,20 @@ public class GlobalExceptionHandler {
         response.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
 
+    }
+    @ExceptionHandler(InvalidAppointmentStatusException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAppointmentStatusException(
+            InvalidAppointmentStatusException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 }
 
