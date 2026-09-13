@@ -27,7 +27,7 @@ public class DoctorScheduleService {
     if (!request.getStartTime().isBefore(request.getEndTime())) {
         throw new InvalidScheduleException("Start Time must be before End Time");
     }
-    boolean isDuplicate = scheduleRepo.existsByDoctorIdAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(doctorId,
+    boolean isDuplicate = scheduleRepo.existsByDoctorIdAndDayOfWeekAndStartTimeAndEndTime(doctorId,
          request.getDayOfWeek(),
          request.getStartTime(),
           request.getEndTime());
