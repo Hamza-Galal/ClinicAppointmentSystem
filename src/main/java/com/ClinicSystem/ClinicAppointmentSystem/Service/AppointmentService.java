@@ -1,5 +1,6 @@
 package com.ClinicSystem.ClinicAppointmentSystem.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,77 +25,143 @@ import com.ClinicSystem.ClinicAppointmentSystem.Repository.PatientRepository;
 
 import lombok.AllArgsConstructor;
 
-@Service 
-@AllArgsConstructor 
+@Service
+@AllArgsConstructor
 public class AppointmentService {
-    private  final AppointmentRepository appointmentRepo;
-    private  final DoctorScheduleRepository doctorScheduleRepository;
-    private  final PatientRepository  patientRepository;
-    private  final DoctorRepository   doctorRepository;
 
-    public  AppointmentResponse getAppointmentById(Long id){
+    private final AppointmentRepository appointmentRepo;
+    private final DoctorScheduleRepository doctorScheduleRepository;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+
+    public AppointmentResponse getAppointmentById(Long id) {
         Appointment appointment = appointmentRepo.findById(id)
-        .orElseThrow(()-> new AppointmentNotFoundException("Appointment NOT Found"));
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment NOT Found"));
+
         return convertToResponse(appointment);
     }
 
-    public AppointmentResponse createAppointment(AppointmentCreateRequest request){
+    public List<AppointmentResponse> getAppointments(
+            AppointmentStatus status,
+            LocalDate appointmentDate) {
+
+        return appointmentRepo.findAppointments(status, appointmentDate)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    public List<AppointmentResponse> getPatientAppointments(
+            Long patientId,
+            AppointmentStatus status,
+            LocalDate appointmentDate) {
+
+        patientRepository.findById(patientId)
+                .orElseThrow(() -> new PatientNotFoundException("Patient Not Found"));
+
+        return appointmentRepo.findPatientAppointments(
+                        patientId,
+                        status,
+                        appointmentDate)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    public List<AppointmentResponse> getDoctorAppointments(
+            Long doctorId,
+            AppointmentStatus status,
+            LocalDate appointmentDate) {
+
+        doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor Not Found"));
+
+        return appointmentRepo.findDoctorAppointments(
+                        doctorId,
+                        status,
+                        appointmentDate)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    public AppointmentResponse createAppointment(AppointmentCreateRequest request) {
         Patient patient = patientRepository.findById(request.getPatientId())
-        .orElseThrow(()-> new PatientNotFoundException("Patient Not Found"));
+                .orElseThrow(() -> new PatientNotFoundException("Patient Not Found"));
 
-        Doctor doctor = doctorRepository.findById(request.getDoctorId()).
-        orElseThrow(()-> new DoctorNotFoundException("Doctor Not Found"));
+        Doctor doctor = doctorRepository.findById(request.getDoctorId())
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor Not Found"));
 
-        LocalDateTime appointmenDateTime = LocalDateTime.of(request.getAppointmentDate(), request.getAppointmentTime());
-        if (!appointmenDateTime.isAfter(LocalDateTime.now())){
+        LocalDateTime appointmenDateTime = LocalDateTime.of(
+                request.getAppointmentDate(),
+                request.getAppointmentTime());
+
+        if (!appointmenDateTime.isAfter(LocalDateTime.now())) {
             throw new AppointmentConflictException("Appointment cannot be in the past");
         }
 
-        List<DoctorSchedule> schedules = doctorScheduleRepository.findByDoctorId(doctor.getId());
-        boolean withinSchedule = schedules.stream().
-        anyMatch(schedule -> schedule.getDayOfWeek().equals(request.getAppointmentDate().getDayOfWeek())
-         && !request.getAppointmentTime().isBefore(schedule.getStartTime())
-         && !request.getAppointmentTime().isBefore(schedule.getEndTime()));
+        List<DoctorSchedule> schedules =
+                doctorScheduleRepository.findByDoctorId(doctor.getId());
 
-         if (!withinSchedule) {
-            throw new OutsideWorkingHoursException("Appointment time is outside the doctor's working hours");
-         }
+        boolean withinSchedule = schedules.stream()
+                .anyMatch(schedule ->
+                        schedule.getDayOfWeek().equals(
+                                request.getAppointmentDate().getDayOfWeek())
+                                && !request.getAppointmentTime()
+                                .isBefore(schedule.getStartTime())
+                                && !request.getAppointmentTime()
+                                .isBefore(schedule.getEndTime()));
 
-         boolean doctorConflict = appointmentRepo.existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusNot(doctor.getId(), 
-         request.getAppointmentDate(), 
-         request.getAppointmentTime(), 
-         AppointmentStatus.CANCELLED);
+        if (!withinSchedule) {
+            throw new OutsideWorkingHoursException(
+                    "Appointment time is outside the doctor's working hours");
+        }
 
-         if (doctorConflict) {
-            throw new AppointmentConflictException("Doctor Already Has An Appointment at this time");
-         }
+        boolean doctorConflict =
+                appointmentRepo.existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
+                        doctor.getId(),
+                        request.getAppointmentDate(),
+                        request.getAppointmentTime(),
+                        AppointmentStatus.CANCELLED);
 
-           boolean PatientConflict = appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(patient.getId(), 
-         request.getAppointmentDate(), 
-         request.getAppointmentTime(), 
-         AppointmentStatus.CANCELLED);
+        if (doctorConflict) {
+            throw new AppointmentConflictException(
+                    "Doctor Already Has An Appointment at this time");
+        }
 
-         if (PatientConflict) {
-            throw new AppointmentConflictException("Patient Already Has An Appointment at this time");
-         }
-         Appointment appointment = new Appointment();
-         appointment.setPatient(patient);
-         appointment.setDoctor(doctor);
-         appointment.setAppointmentDate(request.getAppointmentDate());
-         appointment.setAppointmentTime(request.getAppointmentTime());
-         appointment.setReasonForVisit(request.getReasonForVisit());
-         appointment.setStatus(AppointmentStatus.SCHEDULED);
-         Appointment saved = appointmentRepo.save(appointment);
-         return convertToResponse(saved);
-    }   
+        boolean PatientConflict =
+                appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
+                        patient.getId(),
+                        request.getAppointmentDate(),
+                        request.getAppointmentTime(),
+                        AppointmentStatus.CANCELLED);
 
-    private  AppointmentResponse convertToResponse(Appointment appointment){
-        return  new AppointmentResponse(appointment.getId(),
-    appointment.getPatient().getId(),
-    appointment.getDoctor().getId(),
-    appointment.getAppointmentDate(),
-    appointment.getAppointmentTime(),
-    appointment.getReasonForVisit(),
-    appointment.getStatus());
+        if (PatientConflict) {
+            throw new AppointmentConflictException(
+                    "Patient Already Has An Appointment at this time");
+        }
+
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(request.getAppointmentDate());
+        appointment.setAppointmentTime(request.getAppointmentTime());
+        appointment.setReasonForVisit(request.getReasonForVisit());
+        appointment.setStatus(AppointmentStatus.SCHEDULED);
+
+        Appointment saved = appointmentRepo.save(appointment);
+
+        return convertToResponse(saved);
+    }
+
+    private AppointmentResponse convertToResponse(Appointment appointment) {
+        return new AppointmentResponse(
+                appointment.getId(),
+                appointment.getPatient().getId(),
+                appointment.getDoctor().getId(),
+                appointment.getAppointmentDate(),
+                appointment.getAppointmentTime(),
+                appointment.getReasonForVisit(),
+                appointment.getStatus());
     }
 }
