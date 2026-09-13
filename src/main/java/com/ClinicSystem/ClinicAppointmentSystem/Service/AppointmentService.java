@@ -109,7 +109,7 @@ public class AppointmentService {
                                 request.getAppointmentDate().getDayOfWeek())
                                 && !request.getAppointmentTime()
                                 .isBefore(schedule.getStartTime())
-                                && !request.getAppointmentTime()
+                                && request.getAppointmentTime()
                                 .isBefore(schedule.getEndTime()));
 
         if (!withinSchedule) {
@@ -130,7 +130,7 @@ public class AppointmentService {
         }
 
         boolean PatientConflict =
-                appointmentRepo.existsBypatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
+                appointmentRepo.existsByPatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
                         patient.getId(),
                         request.getAppointmentDate(),
                         request.getAppointmentTime(),
