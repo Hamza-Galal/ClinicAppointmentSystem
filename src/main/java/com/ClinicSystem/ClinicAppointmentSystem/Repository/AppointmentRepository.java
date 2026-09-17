@@ -24,6 +24,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             LocalDate appointmentDate,
             LocalTime appointmentTime,
             AppointmentStatus status);
+    List<Appointment> findByDoctorIdAndAppointmentDate(long doctorId , LocalDate appointmentDate);
 
     @Query("""
             SELECT a
