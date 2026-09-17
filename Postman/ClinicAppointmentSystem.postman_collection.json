@@ -1522,6 +1522,39 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Available Appointment Slots",
+      "item": [
+        {
+          "name": "Get available slots",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/doctors/1/available-slots?date=2026-12-21",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "doctors",
+                "1",
+                "available-slots"
+              ],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2026-12-21"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
