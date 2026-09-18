@@ -23,6 +23,9 @@ import com.ClinicSystem.ClinicAppointmentSystem.Repository.AppointmentRepository
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorScheduleRepository;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.PatientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import lombok.AllArgsConstructor;
 
@@ -222,5 +225,49 @@ public class AppointmentService {
                 appointment.getAppointmentTime(),
                 appointment.getReasonForVisit(),
                 appointment.getStatus());
+    }
+
+    public Page<AppointmentResponse> getAppointments(
+            AppointmentStatus status,
+            LocalDate appointmentDate,
+            int page,
+            int size,
+            String sort) {
+
+        PageRequest pageable = createAppointmentPageable(page, size, sort);
+
+        return appointmentRepo.findAppointmentsPage(
+                        status,
+                        appointmentDate,
+                        pageable)
+                .map(this::convertToResponse);
+    }
+
+    private PageRequest createAppointmentPageable(
+            int page,
+            int size,
+            String sort) {
+
+        if (sort == null || sort.isBlank()) {
+            return PageRequest.of(
+                    page,
+                    size,
+                    Sort.by(
+                            Sort.Order.asc("appointmentDate"),
+                            Sort.Order.asc("appointmentTime")));
+        }
+
+        String[] sortParts = sort.split(",");
+
+        Sort.Direction direction = Sort.Direction.ASC;
+
+        if (sortParts.length > 1) {
+            direction = Sort.Direction.fromString(sortParts[1]);
+        }
+
+        return PageRequest.of(
+                page,
+                size,
+                Sort.by(direction, sortParts[0]));
     }
 }

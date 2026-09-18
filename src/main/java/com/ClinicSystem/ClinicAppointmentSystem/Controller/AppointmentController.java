@@ -3,6 +3,7 @@ package com.ClinicSystem.ClinicAppointmentSystem.Controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +43,22 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AppointmentResponse>> getAppointments(
+    public ResponseEntity<Page<AppointmentResponse>> getAppointments(
             @RequestParam(required = false) AppointmentStatus status,
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date) {
+            LocalDate date,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sort) {
 
-        return ResponseEntity.ok(service.getAppointments(status, date));
+        return ResponseEntity.ok(
+                service.getAppointments(
+                        status,
+                        date,
+                        page,
+                        size,
+                        sort));
     }
 
     @GetMapping("/{id}")

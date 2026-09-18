@@ -14,6 +14,12 @@ import com.ClinicSystem.ClinicAppointmentSystem.Model.Doctor;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Specialization;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.DoctorRepository;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.SpecializationRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
+
 
 @Service
 public class DoctorService {
@@ -134,4 +140,49 @@ public class DoctorService {
                 specializationName
         );
     }
+
+    public Page<DoctorResponse> searchDoctors(
+            String specialization,
+            String name,
+            int page,
+            int size,
+            String sort) {
+
+        Pageable pageable = createPageable(page, size, sort);
+
+        return repo.searchDoctors(specialization, name, pageable)
+                .map(this::convertToResponse);
+    }
+
+    private Pageable createPageable(int page, int size, String sort) {
+
+        if (sort == null || sort.isBlank()) {
+            return PageRequest.of(
+                    page,
+                    size,
+                    Sort.by(
+                            Sort.Order.asc("firstName"),
+                            Sort.Order.asc("lastName")));
+        }
+
+        String[] sortParts = sort.split(",");
+
+        String property = switch (sortParts[0]) {
+            case "experience" -> "yearsOfExperience";
+            default -> sortParts[0];
+        };
+
+        Sort.Direction direction = Sort.Direction.ASC;
+
+        if (sortParts.length > 1) {
+            direction = Sort.Direction.fromString(sortParts[1]);
+        }
+
+        return PageRequest.of(
+                page,
+                size,
+                Sort.by(direction, property));
+    }
+
+
 }

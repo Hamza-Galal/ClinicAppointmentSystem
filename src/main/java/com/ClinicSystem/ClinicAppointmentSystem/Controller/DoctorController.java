@@ -23,6 +23,7 @@ import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.DoctorResponse;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Enums.AppointmentStatus;
 import com.ClinicSystem.ClinicAppointmentSystem.Service.AppointmentService;
 import com.ClinicSystem.ClinicAppointmentSystem.Service.DoctorService;
+import org.springframework.data.domain.Page;
 
 import jakarta.validation.Valid;
 
@@ -50,8 +51,20 @@ public class DoctorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DoctorResponse>> getAllDoctors() {
-        return ResponseEntity.ok(doctorService.getAllDoctors());
+    public ResponseEntity<Page<DoctorResponse>> getAllDoctors(
+            @RequestParam(required = false) String specialization,
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String sort) {
+
+        return ResponseEntity.ok(
+                doctorService.searchDoctors(
+                        specialization,
+                        name,
+                        page,
+                        size,
+                        sort));
     }
 
     @GetMapping("/{id}")

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +26,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             LocalDate appointmentDate,
             LocalTime appointmentTime,
             AppointmentStatus status);
-    List<Appointment> findByDoctorIdAndAppointmentDate(long doctorId , LocalDate appointmentDate);
+
+    List<Appointment> findByDoctorIdAndAppointmentDate(
+            long doctorId,
+            LocalDate appointmentDate);
 
     @Query("""
             SELECT a
@@ -62,4 +67,41 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("doctorId") Long doctorId,
             @Param("status") AppointmentStatus status,
             @Param("appointmentDate") LocalDate appointmentDate);
+
+    @Query("""
+            SELECT a
+            FROM Appointment a
+            WHERE (:status IS NULL OR a.status = :status)
+            AND (:appointmentDate IS NULL OR a.appointmentDate = :appointmentDate)
+            """)
+    Page<Appointment> findAppointmentsPage(
+            @Param("status") AppointmentStatus status,
+            @Param("appointmentDate") LocalDate appointmentDate,
+            Pageable pageable);
+
+    @Query("""
+            SELECT a
+            FROM Appointment a
+            WHERE a.patient.id = :patientId
+            AND (:status IS NULL OR a.status = :status)
+            AND (:appointmentDate IS NULL OR a.appointmentDate = :appointmentDate)
+            """)
+    Page<Appointment> findPatientAppointmentsPage(
+            @Param("patientId") Long patientId,
+            @Param("status") AppointmentStatus status,
+            @Param("appointmentDate") LocalDate appointmentDate,
+            Pageable pageable);
+
+    @Query("""
+            SELECT a
+            FROM Appointment a
+            WHERE a.doctor.id = :doctorId
+            AND (:status IS NULL OR a.status = :status)
+            AND (:appointmentDate IS NULL OR a.appointmentDate = :appointmentDate)
+            """)
+    Page<Appointment> findDoctorAppointmentsPage(
+            @Param("doctorId") Long doctorId,
+            @Param("status") AppointmentStatus status,
+            @Param("appointmentDate") LocalDate appointmentDate,
+            Pageable pageable);
 }

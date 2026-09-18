@@ -12,6 +12,9 @@ import com.ClinicSystem.ClinicAppointmentSystem.Exception.DuplicateEmailExceptio
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.PatientNotFoundException;
 import com.ClinicSystem.ClinicAppointmentSystem.Model.Patient;
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.PatientRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class PatientService {
@@ -21,7 +24,7 @@ public class PatientService {
         this.repo = repo;
     }
     
-    //createPatient//
+
     public PatientResponse createPatient(PatientCreateRequest request){
         if (repo.findByEmail(request.getEmail()).isPresent()) {
             throw new DuplicateEmailException("Email Already exists");
@@ -39,18 +42,18 @@ public class PatientService {
         return convertToResponse(p);
     }
 
-    //Get All Patients//
+
     public List<PatientResponse> getAllPatients(){
         return repo.findAll().stream().map(patient ->this.convertToResponse(patient)).toList();
     }
 
-    //Get Patient by id//
+
     public PatientResponse getPatientById(Long id){
         Patient p = repo.findById(id).orElseThrow(()-> new PatientNotFoundException("Patient Not Found"));
         return convertToResponse(p);
     }
 
-    //update patient
+
     public PatientResponse updatePatient(Long id, PatientUpdateRequest request){
         Patient p = repo.findById(id).orElseThrow(()-> new PatientNotFoundException("Patient Not Found"));
 
@@ -67,7 +70,7 @@ public class PatientService {
         return convertToResponse(p);
     }
     
-    //DeletePatient//
+
     public void deletePatient(Long id){
         if (!repo.existsById(id)) {
             throw new PatientNotFoundException("Patient Not Found");
@@ -75,11 +78,42 @@ public class PatientService {
         repo.deleteById(id);
     }
 
-    /* A function to convert Patient object to a Patient Response object */
+
     public PatientResponse convertToResponse(Patient p){
         return new PatientResponse(p.getId(),p.getFirstName(),
         p.getLastName(),p.getEmail(),
         p.getPhoneNumber(),p.getDateOfBirth(),
         p.getGender(),p.getRegistrationDate());
+    }
+
+    public Page<PatientResponse> getPatients(
+            int page,
+            int size,
+            String sort) {
+
+        PageRequest pageable;
+
+        if (sort == null || sort.isBlank()) {
+            pageable = PageRequest.of(
+                    page,
+                    size,
+                    Sort.by("registrationDate").ascending());
+        } else {
+            String[] sortParts = sort.split(",");
+
+            Sort.Direction direction = Sort.Direction.ASC;
+
+            if (sortParts.length > 1) {
+                direction = Sort.Direction.fromString(sortParts[1]);
+            }
+
+            pageable = PageRequest.of(
+                    page,
+                    size,
+                    Sort.by(direction, sortParts[0]));
+        }
+
+        return repo.findAll(pageable)
+                .map(this::convertToResponse);
     }
 }
