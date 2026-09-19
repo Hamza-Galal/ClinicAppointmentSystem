@@ -212,5 +212,47 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
+    @ExceptionHandler(MedicalRecordNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMedicalRecordNotFoundException(
+            MedicalRecordNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(404);
+        response.setError("Not Found");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+    @ExceptionHandler(DuplicateMedicalRecordException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateMedicalRecordException(
+            DuplicateMedicalRecordException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+    @ExceptionHandler(InvalidMedicalRecordException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidMedicalRecordException(
+            InvalidMedicalRecordException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(400);
+        response.setError("Bad Request");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
 
