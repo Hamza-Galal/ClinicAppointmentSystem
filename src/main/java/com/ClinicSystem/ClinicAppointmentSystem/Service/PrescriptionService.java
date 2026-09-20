@@ -14,8 +14,8 @@ import com.ClinicSystem.ClinicAppointmentSystem.Repository.MedicalRecordReposito
 import com.ClinicSystem.ClinicAppointmentSystem.Repository.PrescriptionRepository;
 @Service 
 public class PrescriptionService {
-    private PrescriptionRepository prescriptionRepository;
-    private MedicalRecordRepository medicalRecordRepository;
+    private final PrescriptionRepository prescriptionRepository;
+    private final MedicalRecordRepository medicalRecordRepository;
     
     public PrescriptionService(PrescriptionRepository prescriptionRepository,
             MedicalRecordRepository medicalRecordRepository) {
