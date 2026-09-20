@@ -1555,6 +1555,459 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Search, Pagination & Sorting",
+      "item": [
+        {
+          "name": "Search Doctors by Specialization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/doctors?specializations=Cardiology",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "doctors"
+              ],
+              "query": [
+                {
+                  "key": "specializations",
+                  "value": "Cardiology"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search doctors by name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/doctors?name=ahmed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "doctors"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "ahmed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patients Page 0",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients?page=0&size=5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients?page=1&size=4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "4"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Medical Visit Records",
+      "item": [
+        {
+          "name": "Error Tests",
+          "item": [
+            {
+              "name": "Appointment Doesn't Exist",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"diagnosis\": \"Flu\",\r\n    \"outcome\": \"Test\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/appointments/9999/medical-record",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "appointments",
+                    "9999",
+                    "medical-record"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Medical Record Doesn't Exist",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/medical-records/9999",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "medical-records",
+                    "9999"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Medical Record",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"diagnosis\": \"Flu\",\r\n    \"outcome\": \"Patient should rest.\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/appointments/1/medical-record",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "appointments",
+                "1",
+                "medical-record"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get medical record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/medical-records/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "medical-records",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get patient medical record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients/1/medical-records",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients",
+                "1",
+                "medical-records"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Prescriptions tests",
+      "item": [
+        {
+          "name": "Error Tests",
+          "item": [
+            {
+              "name": "Medical Record Doesn't Exist",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"medicationName\": \"Paracetamol\",\r\n    \"dosage\": \"500mg\",\r\n    \"treatmentDuration\": \"3 days\",\r\n    \"frequency\": \"Twice daily\",\r\n    \"duration\": \"5 days\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/medical-records/9999/prescriptions",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "medical-records",
+                    "9999",
+                    "prescriptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid Medication Information",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"medicationName\": \"\",\r\n    \"dosage\": \"500mg\",\r\n    \"treatmentDuration\": \"6 weeks\",\r\n    \"frequency\": \"Twice daily\",\r\n    \"duration\": \"5 days\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/medical-records/1/prescriptions",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "medical-records",
+                    "1",
+                    "prescriptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Patient Doesn't Exist",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8090/api/patients/9999/prescriptions",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "patients",
+                    "9999",
+                    "prescriptions"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Missing Required Information",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"medicationName\": \"Paracetamol\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8090/api/medical-records/1/prescriptions",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8090",
+                  "path": [
+                    "api",
+                    "medical-records",
+                    "1",
+                    "prescriptions"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"medicationName\": \"Paracetamol\",\r\n    \"dosage\": \"500mg\",\r\n    \"treatmentDuration\": \"4 Days\",\r\n    \"frequency\": \"Twice daily\",\r\n    \"duration\": \"5 days\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8090/api/medical-records/1/prescriptions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "medical-records",
+                "1",
+                "prescriptions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get medical records prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/medical-records/1/prescriptions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "medical-records",
+                "1",
+                "prescriptions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient Prescriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/patients/1/prescriptions",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8090",
+              "path": [
+                "api",
+                "patients",
+                "1",
+                "prescriptions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }
