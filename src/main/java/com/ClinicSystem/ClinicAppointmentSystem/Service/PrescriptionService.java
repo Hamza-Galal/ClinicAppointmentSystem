@@ -52,7 +52,7 @@ public class PrescriptionService {
         if (!medicalRecordRepository.existsById(id)) {
             throw new MedicalRecordNotFoundException("Medical Record for this patient is Not Found");
         }
-        List<Prescription> prescriptions = prescriptionRepository.findByMedicalRecordPatientId(id);
+        List<Prescription> prescriptions = prescriptionRepository.findByMedicalRecordAppointmentPatientId(id);
         List<PrescriptionResponse> responses = new ArrayList<>();
             for (Prescription prescription : prescriptions) {
                 responses.add(convertToResponse(prescription));
