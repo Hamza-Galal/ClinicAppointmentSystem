@@ -8,5 +8,5 @@ import com.ClinicSystem.ClinicAppointmentSystem.Model.Prescription;
 
 public interface PrescriptionRepository extends JpaRepository<Prescription,Long> {
     List<Prescription> findByMedicalRecordId(long medicalRecordId);
-    List<Prescription> findByMedicalRecordPatientId(long patientId);
+    List<Prescription> findByMedicalRecordAppointmentPatientId(long patientId);
 }
