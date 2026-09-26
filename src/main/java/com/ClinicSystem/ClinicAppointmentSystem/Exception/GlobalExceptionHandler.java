@@ -254,5 +254,28 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+    @ExceptionHandler (UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex ,
+         HttpServletRequest request){
+            ErrorResponse response = new ErrorResponse();
+            response.setTimeStamp(LocalDateTime.now());
+            response.setStatus(409);
+            response.setError("Conflict Error");
+            response.setMessage(ex.getMessage());
+            response.setPath(request.getRequestURI());
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+         }
+    @ExceptionHandler (InvalidCredintialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredintialsException(InvalidCredintialsException ex ,
+    HttpServletRequest request){
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(401);
+        response.setError("Unauthorized");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
 }
 
