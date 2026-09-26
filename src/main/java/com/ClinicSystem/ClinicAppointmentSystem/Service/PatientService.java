@@ -19,9 +19,11 @@ import org.springframework.data.domain.Sort;
 @Service
 public class PatientService {
     private final PatientRepository repo;
+    private final AuthorizationService authorizationService;
 
-    public PatientService(PatientRepository repo) {
+    public PatientService(PatientRepository repo , AuthorizationService authorizationService) {
         this.repo = repo;
+        this.authorizationService = authorizationService;
     }
     
 
@@ -115,5 +117,10 @@ public class PatientService {
 
         return repo.findAll(pageable)
                 .map(this::convertToResponse);
+    }
+    public PatientResponse getPatientByIdForUser(Long id , String email){
+        Patient patient = repo.findById(id).orElseThrow(()->new PatientNotFoundException("Patient Not Found."));
+        authorizationService.checkPatientOwnership(patient, email);
+        return convertToResponse(patient);
     }
 }

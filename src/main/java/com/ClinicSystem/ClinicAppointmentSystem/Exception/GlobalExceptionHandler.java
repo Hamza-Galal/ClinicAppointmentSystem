@@ -277,5 +277,16 @@ public class GlobalExceptionHandler {
         response.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+    @ExceptionHandler (AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex ,
+         HttpServletRequest request){
+            ErrorResponse response = new ErrorResponse();
+            response.setTimeStamp(LocalDateTime.now());
+            response.setStatus(403);
+            response.setError("Forbidden");
+            response.setMessage(ex.getMessage());
+            response.setPath(request.getRequestURI());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+         }
 }
 
