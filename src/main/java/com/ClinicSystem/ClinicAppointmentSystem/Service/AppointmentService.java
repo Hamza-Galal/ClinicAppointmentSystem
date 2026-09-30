@@ -37,6 +37,7 @@ public class AppointmentService {
     private final DoctorScheduleRepository doctorScheduleRepository;
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
+    private final WaitingListService waitingListService;
 
     public AppointmentResponse getAppointmentById(Long id) {
         Appointment appointment = appointmentRepo.findById(id)
@@ -88,14 +89,14 @@ public class AppointmentService {
                     "Doctor Already Has An Appointment at this time");
         }
 
-        boolean PatientConflict =
+        boolean patientConflict =
                 appointmentRepo.existsByPatientIdAndAppointmentDateAndAppointmentTimeAndStatusNot(
                         patient.getId(),
                         request.getAppointmentDate(),
                         request.getAppointmentTime(),
                         AppointmentStatus.CANCELLED);
 
-        if (PatientConflict) {
+        if (patientConflict) {
             throw new AppointmentConflictException(
                     "Patient Already Has An Appointment at this time");
         }
@@ -194,6 +195,13 @@ public class AppointmentService {
         appointment.setStatus(newStatus);
 
         Appointment updated = appointmentRepo.save(appointment);
+
+        if (newStatus == AppointmentStatus.CANCELLED) {
+            waitingListService.getFirstEligiblePatient(
+                    appointment.getDoctor().getId(),
+                    appointment.getAppointmentDate(),
+                    appointment.getAppointmentTime());
+        }
 
         return convertToResponse(updated);
     }

@@ -288,5 +288,45 @@ public class GlobalExceptionHandler {
             response.setPath(request.getRequestURI());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
          }
+
+    @ExceptionHandler(DuplicateWaitingListException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateWaitingListException(
+            DuplicateWaitingListException ex,
+            HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
+    @ExceptionHandler(WaitingListEntryNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleWaitingListEntryNotFoundException(
+            WaitingListEntryNotFoundException ex,
+            HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(404);
+        response.setError("Not Found");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(WaitingListSlotAvailableException.class)
+    public ResponseEntity<ErrorResponse> handleWaitingListSlotAvailableException(
+            WaitingListSlotAvailableException ex,
+            HttpServletRequest request) {
+        ErrorResponse response = new ErrorResponse();
+        response.setTimeStamp(LocalDateTime.now());
+        response.setStatus(409);
+        response.setError("Conflict Error");
+        response.setMessage(ex.getMessage());
+        response.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+    }
+
 }
 
