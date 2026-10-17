@@ -2,8 +2,10 @@ package com.ClinicSystem.ClinicAppointmentSystem.Service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.LoginRequest;
+import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.PatientCreateRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Request.RegisterRequest;
 import com.ClinicSystem.ClinicAppointmentSystem.DTO.Response.LoginResponse;
 import com.ClinicSystem.ClinicAppointmentSystem.Exception.InvalidCredintialsException;
@@ -16,18 +18,24 @@ import com.ClinicSystem.ClinicAppointmentSystem.Security.JwtService;
 @Service 
 public class AuthenticationService {
     private final UserRepository userRepository;
+    private final PatientService patientService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    public AuthenticationService(UserRepository userRepository, JwtService jwtService,
+    public AuthenticationService(UserRepository userRepository,PatientService patientService,JwtService jwtService,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.patientService = patientService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
+    @Transactional 
     public  void register(RegisterRequest request){
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email Already Exists");
         }
+        PatientCreateRequest p = new PatientCreateRequest(request.getFirstName(),request.getLastName(),
+        request.getEmail(),request.getPhoneNumber(),request.getDateOfBirth(),request.getGender());
+        patientService.createPatient(p);
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
