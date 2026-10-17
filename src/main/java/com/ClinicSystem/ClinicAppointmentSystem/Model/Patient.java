@@ -22,7 +22,7 @@ public class Patient {
     private Long id;
 
     private String firstName;
-    private String LastName;
+    private String lastName;
     
     @Column(unique = true)
     private String email;
